@@ -1,0 +1,21 @@
+In docker:
+
+make CPUS=1 qemu-gdb
+
+
+In another window to enter gdb:
+docker exec -it c3d92067625a bash
+gdb-multiarch kernel/kernel
+
+
+# (gdb) entered gdb
+
+set confirm off
+set architecture riscv:rv64
+target remote localhost:25000
+set riscv use-compressed-breakpoints yes
+
+
+layout split
+layout asm
+layout src
