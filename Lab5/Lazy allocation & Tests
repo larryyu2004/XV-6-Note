@@ -13,9 +13,11 @@
     2. In kernel/trap.c, usertrap(), 
         else if(r_scause() == 13 || r_scause() == 15){
             uint64 va = r_stval(); //see lecture8 (When page fault happens, it will put the faulting address into that stval register)
-            if(is_lazy_alloc_va(va) < 0){
-                printf("lazy_alloc fail!\n");
-                p->kill = 1;
+            if(is_lazy_alloc_va(va)){
+                if(lazy_alloc(va) < 0){
+                    printf("lazy_alloc fail!\n");
+                    p->kill = 1;
+                }
             }
         }
 
