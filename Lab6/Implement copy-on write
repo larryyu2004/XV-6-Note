@@ -1,0 +1,45 @@
+1. Pre-Knowledges
+
+    1. Copy-on-Write (cow) technology:
+        After executing fork(),
+        Original:
+            Copy parent process's pa to child, parent's va map to its va, child 's va map to its va.
+
+        Optimised:
+            Child process's va map to parent process's pa (save pa)
+            When parent/child process wants to do some modify on its PTE
+            Copy that pagetable to new memory space and give some others permission
+            Map parent/child's va to new pa
+
+    2. Step:
+        Fork:
+            1. Map child process's va to parent process's pa
+            2. ban PTE_W
+
+        Page fault:
+            1. When parent or child try to do writing on that PTE, page fault will happen.
+            2. Check the page fault is due to cow?
+            3. unmap va, copy PTE;
+
+        When releasing pa, the pa may have other va's mapping?
+            1. Using "reference count" to solve the issue.
+
+    3. 
+    4. 
+    5. 
+ 
+
+2. Step-by-Step Process
+
+    1. From Lab5/Lazytests and Usertests, we know fork will call uvmcopy():
+    
+    Impact:
+
+    2. 
+    Impact:
+
+    3. 
+    Impact:
+
+    4. 
+    Impact:
