@@ -1,12 +1,5 @@
 1. Pre-Knowledges
 
-    1. 
-    2. 
-    3. 
-    4. 
-    5. 
- 
-
 2. Step-by-Step Process
 
     1. In kernel/sysproc.c, sbrk(), modify:
