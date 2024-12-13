@@ -1,0 +1,28 @@
+1. Pre-Knowledges
+
+    1. In a HashTable, if hash function maps multiple different keys to the same position
+        It will become to a link list and we need to traverse it so that to find the correct key-value pair;
+        
+    2. 
+    3. 
+    4. 
+    5. 
+ 
+
+2. Step-by-Step Process
+
+    1.
+    Impact:
+
+    2. 
+    Impact:
+
+    3. 
+    Impact:
+
+    4. 
+    Impact:
+
+you will explore parallel programming with threads and locks using a hash table
+ph runs two benchmarks. First it adds lots of keys to the hash table by calling put(), and prints the achieved rate in puts per second. The it fetches keys from the hash table with get(). 
+It prints the number keys that should have been in the hash table as a result of the puts but are missing (zero in this case), and it prints the number of gets per second it achieved. 
