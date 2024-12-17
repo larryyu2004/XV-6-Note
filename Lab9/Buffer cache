@@ -1,8 +1,57 @@
 1. Pre-Knowledges
 
-    1. 
-    2. 
-    3. 
+    1. In XV-6, we can't access disk directly
+        If we really want to access, we need copy the date to a buffer, then read the data from that buffer
+
+    2. In XV-6, the smallest unit of data on the disk is a block, which size is 1024kb.
+        We can at least read 1024kb from the disk
+
+    3. In kernel/bio.c, When access the disk, we need to call bread(), 
+static struct buf*
+bget(uint dev, uint blockno)
+{
+  struct buf *b;
+
+  acquire(&bcache.lock);
+
+  // Is the block already cached?
+  for(b = bcache.head.next; b != &bcache.head; b = b->next){
+    if(b->dev == dev && b->blockno == blockno){
+      b->refcnt++;
+      release(&bcache.lock);
+      acquiresleep(&b->lock);
+      return b;
+    }
+  }
+
+  // Not cached.
+  // Recycle the least recently used (LRU) unused buffer.
+  for(b = bcache.head.prev; b != &bcache.head; b = b->prev){
+    if(b->refcnt == 0) {
+      b->dev = dev;
+      b->blockno = blockno;
+      b->valid = 0;
+      b->refcnt = 1;
+      release(&bcache.lock);
+      acquiresleep(&b->lock);
+      return b;
+    }
+  }
+  panic("bget: no buffers");
+}
+    If so, return the buffer.
+    If not, it will go to find LRU (Least Recently Used) buffer, and allocate that buffer to current block
+    We can see all the buffer blocks are on a doubly linked list.
+    The first element on the linklist was used recently, the last element is LRU
+
+    Each time calling bget(), it will traversal the linklist first to check current block has been loaded in the buffer or not
+    If not, it traversal from the back to the start (from LRU), until it finds refcnt == 0 (the program is not using the block on the buffer)
+
+    This cause each time when we want to allock block on the buffer, we have to compete the lock of the doubly linked list.
+    
+
+
+
     4. 
     5. 
  
