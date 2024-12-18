@@ -1,0 +1,24 @@
+1. logging is sth that after the fs crush, it can recover the data
+
+2. Disk
+    1. bitmap can represent each data block has been allocated or free
+    2. inode is a data structure. Each inode stores the attributes and disk block locations of the object's data
+
+    bitmap and inode -> metablock
+                        data block
+    
+    In XV-6, there is another log, it has header log: it will record each following log block belongs to which block
+
+    We have some user programs who will call write and read to modify the system files.
+    In the XV-6 kernel, it has block cache.
+    The initial write request will be sent to block cache.
+    Block cache is the copy of block from disk in the memory.
+
+    After calling write, the updates are copied in the log, then we will update header block to indicate current transaction has been done
+    In the fs code, any function call can change the file, there will be a `begin_go` at somewhere, which indicates we will update the fs soon
+    After `begin_go`, fs start to update.
+    `end_op` is to tell fs it has finished all the updates
+    So in the `begin_go` and `end_op`, all the write block operations will only be in the block cache
+    When the system call goes into `end_op`, fs will copy the block cache to the log.
+    
+     
